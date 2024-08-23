@@ -1,0 +1,17 @@
+
+
+IF TRUE {
+VARIANT LEXUS[1][4] = {{3424, 324423, 23423, 32432}}
+}
+
+LEXUS[0][1] = !"alibi"
+
+
+FUNC myfunc
+VARIANT SUPER[1][4] = {{12, 23, 34, 45}}
+RETURN SUPER[0][0]
+ENDFUNC
+
+LEXUS[0][2] = CALL myfunc 35
+
+

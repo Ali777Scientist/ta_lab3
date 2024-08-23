@@ -1,0 +1,66 @@
+%{
+#include <iostream>
+#include "parser.tab.hpp"
+#include <cstdlib>
+%}
+
+%%
+
+"VARIANT" return VARIANT;
+"WHILE" return WHILE;
+"UNTIL" return UNTIL;
+"IF" return IF;
+"COMMAND" return COMMAND;
+"FUNC" return FUNC;
+"ENDFUNC" return ENDFUNC;
+"CALL" return CALL;
+"CONVERT" return CONVERT;
+"TO" return TO;
+"BOOL" { yylval.int_val = 1; return T_BOOL; }
+"DIGIT" { yylval.int_val = 2; return T_DIGIT; }
+"STRING" { yylval.int_val = 3; return T_STRING; }
+"DIGITIZE" return DIGITIZE;
+"PARAM" return PARAM;
+"RETURN" return RETURN;
+
+"LOOKRIGHT" return LOOKRIGHT;
+"LOOKUP" return LOOKUP;
+"LOOKLEFT" return LOOKLEFT;
+"LOOKDOWN" return LOOKDOWN;
+
+"RIGHT" return RIGHT;
+"UP" return UP;
+"LEFT" return LEFT;
+"DOWN" return DOWN;
+
+
+"TRUE"    { yylval.bool_val = 1; return BOOL; }
+"FALSE"   { yylval.bool_val = 0; return BOOL; }
+
+[0-9]+    { yylval.int_val = std::atoi(yytext); return INT; }
+"\""([^"\\]|\\.)*"\"" {
+    yylval.str_val = strdup(yytext + 1);
+    yylval.str_val[strlen(yylval.str_val) - 1] = '\0';
+    return STRING;
+}
+[a-zA-Z_][a-zA-Z0-9_]* { yylval.str_val = strdup(yytext); return ID; }
+
+"==" return EQ;
+[+-=\[\],;{}()!] {
+return *yytext;
+}
+
+[ \t\n]+ ; //ignore spaces
+
+. {
+    std::cerr << "Unknown symbol: " << yytext << std::endl;
+    return 1;
+}
+
+%%
+
+int yywrap() {
+    return 1;
+}
+
+
